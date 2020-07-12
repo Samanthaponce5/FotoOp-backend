@@ -20,22 +20,37 @@ class ApplicationController < ActionController::API
         end
     end
 
-    def session_user
+    def current_user
         decoded_hash = decoded_token
-        if !decoded_hash.empty? 
+        if !decoded_hash.blank? 
             puts decoded_hash.class
             user_id = decoded_hash[0]['user_id']
-            @user = User.find_by(id: user_id)
+            user = User.find_by(id: user_id)
+            user
         else
             nil 
         end
     end
 
+    # def current_user
+    #     decoded = decoded_token
+    #     if decoded
+          
+    #         user_id = decoded[0]['user_id']
+    #         user = User.find_by(id: user_id)
+    #         user
+    #     end
+    #     end
+
     def logged_in?
-        !!session_user
+        !!current_user
     end
 
     def require_login
      render json: {message: 'Please Login'}, status: :unauthorized unless logged_in?
     end
+
+
+
+    
 end

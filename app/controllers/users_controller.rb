@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :require_login, only: [:create,:index]
+  skip_before_action :require_login, only: [:create,:index, :show]
 
   def index 
     users = User.all
@@ -21,10 +21,23 @@ class UsersController < ApplicationController
     end
   end
 
+  def show 
+    if current_user
+
+    user = User.find(current_user.id) 
+    posts = user.pictures.with_attached_attachment.order(id: :desc)
+
+    render json: posts
+else
+    render json: {errors: "No user is logged in"}
+
+    end
+  end
+
   
   private 
 
   def user_params
-    params.permit(:username, :password)
+    params.permit(:username, :password,:email,:bio, :firstname,:lastname)
   end
 end
