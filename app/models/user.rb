@@ -7,5 +7,5 @@ class User < ApplicationRecord
     has_many :comments
     has_many :likes, dependent: :destroy
 
-
+    has_one_attached :avatar
 end
