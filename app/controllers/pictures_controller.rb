@@ -24,8 +24,9 @@ end
 
   def show
     
-    @post = Picture.find(params[:id]) 
+    picture = Picture.find(params[:id]) 
     # @comment = Comment.new
+    render json: picture
 end
   private
 

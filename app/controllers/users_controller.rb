@@ -26,12 +26,18 @@ class UsersController < ApplicationController
 
     user = User.find(current_user.id) 
     posts = user.pictures.with_attached_attachment.order(id: :desc)
-
     render json: posts
 else
     render json: {errors: "No user is logged in"}
 
     end
+  end
+
+  def update
+    user = User.find(params[:id])
+    user.update(avatar:params[:avatar])
+    avatar_url = rails_blob_path(user.avatar)
+    render json: {user:user, avatar_url:avatar_url}
   end
 
   
