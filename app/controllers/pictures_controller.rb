@@ -28,6 +28,12 @@ end
     # @comment = Comment.new
     render json: picture
 end
+
+def destroy
+  picture = Picture.find(params[:id])
+  picture.destroy
+end
+
   private
 
   def picture_params

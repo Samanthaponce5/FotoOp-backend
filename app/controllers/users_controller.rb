@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :require_login, only: [:create,:index, :show]
+  skip_before_action :require_login, only: [:create,:index, :show, :showVisit]
 
   def index 
     users = User.all
@@ -26,11 +26,19 @@ class UsersController < ApplicationController
 
     user = User.find(current_user.id) 
     posts = user.pictures.with_attached_attachment.order(id: :desc)
-    render json: posts
+    render json: {posts:posts, user:user}
 else
     render json: {errors: "No user is logged in"}
 
     end
+  end
+
+  def showVisit
+    user =  User.find(params[:id])
+    posts = user.pictures.with_attached_attachment.order(id: :desc)
+
+    render json: {posts:posts, user:user}
+
   end
 
   def update
