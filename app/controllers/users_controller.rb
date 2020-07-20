@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
-  skip_before_action :require_login, only: [:create,:index, :show, :showVisit]
+  skip_before_action :require_login, only: [:create,:index, :show, :showVisit, :followees, :followers]
 
   def index 
+    
     users = User.all
     if users
       render json: users
@@ -48,6 +49,20 @@ else
     render json: {user:user, avatar_url:avatar_url}
   end
 
+
+  def followers
+    if current_user
+    user =  User.find(current_user.id)
+    render json: user
+    end
+end
+
+def followees
+  if current_user
+    user =  User.find(current_user.id)
+    posts = user.posts
+  end
+end
   
   private 
 

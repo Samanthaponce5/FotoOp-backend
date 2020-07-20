@@ -2,7 +2,17 @@ class PicturesController < ApplicationController
       skip_before_action :require_login
 
   def index
-    render json: Picture.all.with_attached_attachment.order(id: :desc)
+    if current_user
+      @test = User.find(current_user.id).followees
+      posts = []
+      @test.each do |user|
+          user.pictures.each do |post|
+              posts << post
+          end
+      end
+    
+    render json: posts
+    end
   end
   
   def new
