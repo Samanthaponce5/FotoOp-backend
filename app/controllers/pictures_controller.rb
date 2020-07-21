@@ -3,15 +3,17 @@ class PicturesController < ApplicationController
 
   def index
     if current_user
-      @test = User.find(current_user.id).followees
+      user = User.find(current_user.id).followees
       posts = []
-      @test.each do |user|
+      comments = []
+      user.each do |user|
           user.pictures.each do |post|
               posts << post
+              comments << post.comments
           end
       end
     
-    render json: posts
+    render json:{ posts:posts,comments:comments}
     end
   end
   
@@ -22,6 +24,7 @@ end
   def create
     picture = Picture.new(picture_params)
     picture.user_id = current_user.id
+    
     # byebug
     if picture.save 
       render json: picture, status: :created
@@ -35,8 +38,9 @@ end
   def show
     
     picture = Picture.find(params[:id]) 
+    comments = picture.comments
     # @comment = Comment.new
-    render json: picture
+    render json: {picture:picture, comments:comments}
 end
 
 def destroy

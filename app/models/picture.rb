@@ -4,7 +4,7 @@ class Picture < ApplicationRecord
     has_one_attached :attachment
     belongs_to :user
   # has_many :likes
-  # has_many :comments, dependent: :destroy
+  has_many :comments, dependent: :destroy
  
 
 #   validates :attachment, presence: true

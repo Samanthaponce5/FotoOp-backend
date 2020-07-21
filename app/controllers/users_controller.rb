@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :require_login, only: [:create,:index, :show, :showVisit, :followees, :followers]
+  skip_before_action :require_login, only: [:create,:index, :show,:update, :showVisit, :followees, :followers]
 
   def index 
     
@@ -27,7 +27,9 @@ class UsersController < ApplicationController
 
     user = User.find(current_user.id) 
     posts = user.pictures.with_attached_attachment.order(id: :desc)
-    render json: {posts:posts, user:user}
+    followees = User.find(current_user.id).followees
+    followers=User.find(current_user.id).followers
+    render json: {posts:posts, user:user,followees:followees, followers:followers}
 else
     render json: {errors: "No user is logged in"}
 
@@ -37,32 +39,25 @@ else
   def showVisit
     user =  User.find(params[:id])
     posts = user.pictures.with_attached_attachment.order(id: :desc)
-
-    render json: {posts:posts, user:user}
+    followees = User.find(params[:id]).followees
+    followers=User.find(params[:id]).followers
+    render json: {posts:posts, user:user,followees:followees, followers:followers}
 
   end
 
   def update
+    # byebug
     user = User.find(params[:id])
-    user.update(avatar:params[:avatar])
-    avatar_url = rails_blob_path(user.avatar)
-    render json: {user:user, avatar_url:avatar_url}
-  end
-
-
-  def followers
-    if current_user
-    user =  User.find(current_user.id)
-    render json: user
+    if  user.update(user_params)
+    render json: {user:user}
     end
-end
-
-def followees
-  if current_user
-    user =  User.find(current_user.id)
-    posts = user.posts
+    # user = User.find(params[:id])
+    # user.update(avatar:params[:avatar])
+    # avatar_url = rails_blob_path(user.avatar)
+    # render json: {user:user, avatar_url:avatar_url}
   end
-end
+
+
   
   private 
 
