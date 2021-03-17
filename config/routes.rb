@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   resources :pictures
   resources :comments, only:[:create]
-  resources :likes
   resources :pictures, only: [:create, :index, :show]
   
   get '/profile' => 'users#show', as: 'profile'
@@ -11,6 +10,10 @@ Rails.application.routes.draw do
   get '/follow/', to: 'followers#new', as: 'follow'
   post '/follow/:followee_id', to: 'followers#create', as: 'follows'
   resources :followers, only: [:new, :create, :destroy]
+
+  resources :pictures do
+    resources :likes, only: [:create, :destroy, :new]
+  end
 
   resources :users
   post "/login", to: "auth#login"

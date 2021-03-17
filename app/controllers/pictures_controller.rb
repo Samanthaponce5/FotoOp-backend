@@ -6,19 +6,22 @@ class PicturesController < ApplicationController
       user = User.find(current_user.id).followees
       posts = []
       comments = []
+      likes=[]
       user.each do |user|
           user.pictures.each do |post|
               posts << post
               comments << post.comments
+              likes << post.likes
           end
       end
     
-    render json:{ posts:posts,comments:comments}
+    render json:{ posts:posts,comments:comments,likes:likes}
     end
+    
   end
   
   def new
-    @post = Post.new
+    @picture = Picture.new
 end
 
   def create
@@ -39,8 +42,9 @@ end
     
     picture = Picture.find(params[:id]) 
     comments = picture.comments
+    likes = picture.likes
     # @comment = Comment.new
-    render json: {picture:picture, comments:comments}
+    render json: {picture:picture, comments:comments, likes:likes}
 end
 
 def destroy

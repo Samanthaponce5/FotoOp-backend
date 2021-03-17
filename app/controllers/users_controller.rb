@@ -27,9 +27,14 @@ class UsersController < ApplicationController
 
     user = User.find(current_user.id) 
     posts = user.pictures.with_attached_attachment.order(id: :desc)
+      comments=[]
+    user.pictures.each do |post|
+      comments << post.comments
+  end
+    
     followees = User.find(current_user.id).followees
     followers=User.find(current_user.id).followers
-    render json: {posts:posts, user:user,followees:followees, followers:followers}
+    render json: {posts:posts,comments:comments, user:user,followees:followees, followers:followers}
 else
     render json: {errors: "No user is logged in"}
 
@@ -39,6 +44,7 @@ else
   def showVisit
     user =  User.find(params[:id])
     posts = user.pictures.with_attached_attachment.order(id: :desc)
+    
     followees = User.find(params[:id]).followees
     followers=User.find(params[:id]).followers
     render json: {posts:posts, user:user,followees:followees, followers:followers}
